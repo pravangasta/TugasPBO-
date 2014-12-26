@@ -16,27 +16,28 @@ public class hrd {
     public static void main(String[]args){
 
         Database db = new Database();
+        int pilihan;
 
         try{
-            String Nomor_Pegawai = JOptionPane.showInputDialog("Masukan Nomor pegawai");
-            String Nama = JOptionPane.showInputDialog("Masukan nama ");
-            String TTL = JOptionPane.showInputDialog("Masukan Tanggal & Tahun Lahir");
-            String Alamat = JOptionPane.showInputDialog("Masukan Alamat ");
-            String Jenis_Kelamin = JOptionPane.showInputDialog("Masukan Jenis Kelamin ");
-            String Pensiun = JOptionPane.showInputDialog("Umur Pensiun ");
-            String Jabatan = JOptionPane.showInputDialog("Masukan Jabatan ");
-            String Gaji = JOptionPane.showInputDialog("Masukan Gaji ");
+            //String Nomor_Pegawai = JOptionPane.showInputDialog("Masukan Nomor pegawai");
+            //String Nama = JOptionPane.showInputDialog("Masukan nama ");
+            //String TTL = JOptionPane.showInputDialog("Masukan Tanggal & Tahun Lahir");
+            //String Alamat = JOptionPane.showInputDialog("Masukan Alamat ");
+            //String Jenis_Kelamin = JOptionPane.showInputDialog("Masukan Jenis Kelamin ");
+            //String Pensiun = JOptionPane.showInputDialog("Umur Pensiun ");
+            //String Jabatan = JOptionPane.showInputDialog("Masukan Jabatan ");
+            //String Gaji = JOptionPane.showInputDialog("Masukan Gaji ");
             
-            JDateChooser date = new JDateChooser();
-            date.setDate(null);
+            //JDateChooser date = new JDateChooser();
+            //date.setDate(null);
 
-             int i = Integer.parseInt(Nomor_Pegawai);
-             int g = Integer.parseInt(Gaji);
-             Date ttl = Date.valueOf(TTL);
-             int p = Integer.parseInt(Pensiun);
+             //int i = Integer.parseInt(Nomor_Pegawai);
+             //int g = Integer.parseInt(Gaji);
+             //Date ttl = Date.valueOf(TTL);
+             //int p = Integer.parseInt(Pensiun);
              
-            db.setData(i, Nama, ttl, Alamat, Jenis_Kelamin, p, Jabatan, g);
-            db.select();
+            //db.setData(i, Nama, ttl, Alamat, Jenis_Kelamin, p, Jabatan, g);
+            db.selectData();
 
         } catch(Exception e) {
             System.out.println(e.getMessage());
