@@ -3,6 +3,7 @@ package database;
 import com.mysql.jdbc.Connection;
 import java.sql.Date;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import javax.swing.JOptionPane;
@@ -34,63 +35,71 @@ public class Database {
             return koneksi;
         }
             
-        public void setData(int kd_pegawai, String nama, String pob, Date dob, String Alamat, String Jenis_Kelamin, int Pensiun, String jabatan, int Gaji)throws SQLException { 
-            //Mengambil Objek dan Memanggil Koneksi Metode dari Class Database
+        public void insertDb(int nik, String nama, String pob, Date dob, String email, String jabatan, int gajiPokok, Date tglKerja, int absensi)throws SQLException { 
+            // Mengambil objek dan memanggil koneksi method dari kelas Database
             koneksi = new Database().connect();
             try{
-                String sql = "insert into pegawai values(?,?,?);";
-                java.sql.PreparedStatement stmt = koneksi.prepareStatement(sql);
+                String sql = "insert into pegawai values(?,?,?,?,?,?,?,?,?,?,?,?);";
+                PreparedStatement stmt = koneksi.prepareStatement(sql);
                 try{
-                    //Insert Data to the Table based on the Data Type that We Have Made
-                    stmt.setInt(1,kd_pegawai);
+                    int pensiun = new java.util.Date().getYear() - tglKerja.getYear();
+                    int gajiAbsensi = absensi * 100000;
+                    int gajiTotal = gajiPokok + gajiAbsensi;
+                    System.out.println("Pensiun : " + pensiun);
+                    System.out.println("Gaji Absensi : " + gajiAbsensi);
+                    System.out.println("Gaji Total : " + gajiTotal);
+                    
+                    // Memasukkan data ke column pada tabel yang ada di database
+                    stmt.setInt(1,nik);
                     stmt.setString(2,nama);
-                    stmt.setString(3, pob);
+                    stmt.setString(3,pob);
                     stmt.setDate(4,dob);
-                    stmt.setString(5,Alamat);
-                    stmt.setString(6,Jenis_Kelamin);
-                    stmt.setInt(7,Pensiun);
-                    stmt.setString(8,jabatan);
-                    stmt.setInt(9,Gaji);
+                    stmt.setString(5,email);
+                    stmt.setString(6,jabatan);
+                    stmt.setInt(7,gajiPokok);
+                    stmt.setDate(8,tglKerja);
+                    stmt.setInt(9,pensiun);
+                    stmt.setInt(10,absensi);
+                    stmt.setInt(11,gajiAbsensi);
+                    stmt.setInt(12,gajiTotal);
                     stmt.executeUpdate();
-                    JOptionPane.showMessageDialog(null,"Data Berhasil Disimpan");
-                }
-                catch (SQLException se){
-                    JOptionPane.showMessageDialog(null,"Data Gagal Disimpan" + se.getMessage());
+                    
+                    JOptionPane.showMessageDialog(null, "Database Berhasil Menyimpan Data");
+                    System.out.println("Database Berhasil Menyimpan Data");
+                }catch (SQLException se){
+                    JOptionPane.showMessageDialog(null,se.getMessage(), "Database Gagal Menyimpan Data", JOptionPane.ERROR_MESSAGE);
+                    System.out.println("Database Gagal Menyimpan Data\n" + se.getMessage());
                 } stmt.close();
             }catch (Exception e){
+                JOptionPane.showMessageDialog(null, e.getMessage(), "Koneksi Database Gagal", JOptionPane.ERROR_MESSAGE);
                 System.out.println(e.getMessage());
             }
         }
-       public void selectData(){
+        
+        public void selectDb(){
            koneksi = new Database().connect();
            try{
-               String sql = "select * from hrd";
+               String sql = "select * from pegawai";
                java.sql.PreparedStatement stmt = koneksi.prepareStatement(sql);
                ResultSet rs = stmt.executeQuery(sql);
                while (rs.next()){
-                    int Nomor_Pegawai = rs.getInt("kd_pegawai");
-                    String Nama = rs.getString("nama");
+                    int kode_pegawai = rs.getInt("nik");
+                    String nama = rs.getString("nama");
                     String pob = rs.getString("pob");
                     Date dob = rs.getDate("dob");
-                    String Alamat = rs.getString("alamat");
-                    String kelamin = rs.getString("kelamin");
-                    int Pensiun = rs.getInt("tgl_kerja");
-                    String Jabatan = rs.getString("jabatan");
-                    int Gaji = rs.getInt("gaji");
-                   
-                    System.out.println("\nDatabase Pegawai : " +rs.getRow());
-                    System.out.println("NIK : " + Nomor_Pegawai);
-                    System.out.println("Nama : " + Nama);
-                    System.out.println("Tanggal Lahir : " + dob);
-                    System.out.println("Alamat : " + Alamat);
-                    System.out.println("Jenis Kelamin : " + kelamin);
-                    System.out.println("Pensiun : " + Pensiun);
-                    System.out.println("Jabatan : " + Jabatan);
-                    System.out.println("Gaji : " + Gaji);
+                    String email = rs.getString("email");
+                    String jabatan = rs.getString("jabatan");
+                    int gajiPokok = rs.getInt("gajiPokok");
+                    Date tglKerja = rs.getDate("tglKerja");
+                    int pensiun = rs.getInt("pensiun");
+                    int absensi = rs.getInt("absensi");
+                    int gajiAbsensi = rs.getInt("gajiAbsensi");
+                    int totalGaji = rs.getInt("totalGaji");
                }
            }
            catch (Exception e){
                System.out.println(e.getMessage());
            }
        }
+        
 }
