@@ -7,6 +7,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
 
 
 
@@ -56,10 +57,10 @@ public class Database {
                     stmt.setDate(4,dob);
                     stmt.setString(5,email);
                     stmt.setString(6,jabatan);
-                    stmt.setInt(7,gajiPokok);
-                    stmt.setDate(8,tglKerja);
-                    stmt.setInt(9,pensiun);
-                    stmt.setInt(10,absensi);
+                    stmt.setDate(7,tglKerja);
+                    stmt.setInt(8,pensiun);
+                    stmt.setInt(9,absensi);
+                    stmt.setInt(10,gajiPokok);
                     stmt.setInt(11,gajiAbsensi);
                     stmt.setInt(12,gajiTotal);
                     stmt.executeUpdate();
@@ -76,30 +77,59 @@ public class Database {
             }
         }
         
-        public void selectDb(){
-           koneksi = new Database().connect();
-           try{
-               String sql = "select * from pegawai";
-               java.sql.PreparedStatement stmt = koneksi.prepareStatement(sql);
-               ResultSet rs = stmt.executeQuery(sql);
-               while (rs.next()){
-                    int kode_pegawai = rs.getInt("nik");
-                    String nama = rs.getString("nama");
-                    String pob = rs.getString("pob");
-                    Date dob = rs.getDate("dob");
-                    String email = rs.getString("email");
-                    String jabatan = rs.getString("jabatan");
-                    int gajiPokok = rs.getInt("gajiPokok");
-                    Date tglKerja = rs.getDate("tglKerja");
-                    int pensiun = rs.getInt("pensiun");
-                    int absensi = rs.getInt("absensi");
-                    int gajiAbsensi = rs.getInt("gajiAbsensi");
-                    int totalGaji = rs.getInt("totalGaji");
-               }
-           }
-           catch (Exception e){
-               System.out.println(e.getMessage());
-           }
+        public DefaultTableModel selectDb(){
+            DefaultTableModel dtm = new DefaultTableModel();
+            dtm.addColumn("NIK");
+            dtm.addColumn("Nama");
+            dtm.addColumn("Tempat Lahir");
+            dtm.addColumn("Tanggal Lahir");
+            dtm.addColumn("Email");
+            dtm.addColumn("Jabatan");
+            dtm.addColumn("Tanggal Masuk Kerja");
+            dtm.addColumn("Masa Pensiun");
+            dtm.addColumn("Absensi");
+            dtm.addColumn("Gaji Pokok");
+            dtm.addColumn("Gaji Absensi");
+            dtm.addColumn("Gaji Total");
+            
+            try{
+                koneksi = new Database().connect();
+                String sql = "select * from pegawai";
+                java.sql.PreparedStatement stmt = koneksi.prepareStatement(sql);
+                ResultSet rs = stmt.executeQuery(sql);
+                while (rs.next()){
+                    dtm.addRow(new Object[]{
+                        rs.getInt(1),
+                        rs.getString(2),
+                        rs.getString(3),
+                        rs.getDate(4),
+                        rs.getString(5),
+                        rs.getString(6),
+                        rs.getDate(7),
+                        rs.getInt(8),
+                        rs.getInt(9),
+                        rs.getInt(10),
+                        rs.getInt(11),
+                        rs.getInt(12)});
+                    /*
+                     int kode_pegawai = rs.getInt("nik");
+                     String nama = rs.getString("nama");
+                     String pob = rs.getString("pob");
+                     Date dob = rs.getDate("dob");
+                     String email = rs.getString("email");
+                     String jabatan = rs.getString("jabatan");
+                     int gajiPokok = rs.getInt("gajiPokok");
+                     Date tglKerja = rs.getDate("tglKerja");
+                     int pensiun = rs.getInt("pensiun");
+                     int absensi = rs.getInt("absensi");
+                     int gajiAbsensi = rs.getInt("gajiAbsensi");
+                     int totalGaji = rs.getInt("totalGaji");
+                    */
+                }
+            } catch (Exception e){
+                System.out.println(e.getMessage());
+            }
+            return dtm;
        }
         
 }
